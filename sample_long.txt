@@ -1,0 +1,16 @@
+Nexus Analytics Customer Support Manual
+
+Section 1: Account Management
+Users can manage their account settings by navigating to the Settings panel in the top-right corner of the dashboard. To change your password, click "Security" then "Change Password". You must enter your current password before setting a new one. Passwords must be at least 12 characters and include one uppercase letter, one number, and one special character. After changing your password, all other active sessions will be logged out automatically for security.
+
+If you have forgotten your password, use the "Forgot Password" link on the login page. A reset link will be sent to your registered email address within 5 minutes. The reset link expires after 30 minutes. If you do not receive the email, check your spam folder or contact support at help@nexusanalytics.com.
+
+Section 2: Billing and Payments
+Nexus Analytics offers monthly and annual billing plans. Annual plans receive a 20% discount compared to monthly billing. Your billing cycle begins on the date you first subscribed. Invoices are generated automatically and sent to your registered email address on the first day of each billing cycle.
+
+To update your payment method, go to Settings > Billing > Payment Method. We accept all major credit cards (Visa, Mastercard, American Express) and PayPal. Refund requests must be submitted within 30 days of the charge. After 30 days, refunds are not available. To request a refund, email billing@nexusanalytics.com with your invoice number and reason for the refund.
+
+Section 3: Data Exports
+Nexus Analytics allows you to export your data in CSV, Excel, and PDF formats. To export a report, open the report you wish to export, click the "Export" button in the top toolbar, and select your preferred format. Large exports (over 10,000 rows) are processed in the background and delivered to your email when ready, typically within 10 minutes.
+
+Data exports are subject to your plan's monthly export limit. Basic plan users can export up to 5 reports per month. Professional plan users have unlimited exports. If you reach your export limit, you can upgrade your plan or wait until your next billing cycle when the limit resets.
