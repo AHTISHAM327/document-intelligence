@@ -7,7 +7,7 @@ from google import genai
 from google.genai import errors as genai_errors
 
 load_dotenv()
-EMBED_MODEL = "text-embedding-004"
+EMBED_MODEL = "gemini-embedding-001"
 
 CORPUS = [
     "I can't log into my account, it keeps rejecting me.",
@@ -140,8 +140,10 @@ def main() -> None:
         for i, (score, sentence) in enumerate(results):
             print(f"{i + 1:>4} | {score:.4f} | {sentence}")
     except KeyboardInterrupt:
-        print("\n👋 Interrupted. Goodbye!")
-        sys.exit(0)
+        print("\n\n👋 Caught Ctrl+C — stopping cleanly. Nothing was left half-done.")
+        print("   Thanks for using the semantic search demo. Goodbye! ✨")
+        # 130 = conventional exit code for termination by SIGINT (128 + 2)
+        sys.exit(130)
 
 
 if __name__ == "__main__":
