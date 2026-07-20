@@ -13,6 +13,7 @@ from google import genai
 from google.genai import errors as genai_errors
 import chromadb
 from chunker import split_into_chunks, load_text
+from document_loader import load_pdf
 
 load_dotenv()
 EMBED_MODEL = "gemini-embedding-001"
@@ -51,7 +52,11 @@ def get_embedding(genai_client: object, text: str) -> list[float] | None:
 
 
 def ingest_file(
-    genai_client: object, file_path: str, chunk_size: int, overlap: int
+    genai_client: object,
+    file_path: str,
+    chunk_size: int,
+    overlap: int,
+    is_pdf: bool = False,
 ) -> None:
     """Chunk a text file and store each chunk's embedding in Chroma.
 
@@ -60,6 +65,7 @@ def ingest_file(
         file_path: Path to the .txt file to ingest.
         chunk_size: Maximum characters per chunk.
         overlap: Number of overlapping characters between chunks.
+        is_pdf: If True, use load_pdf() for extraction. If False, use load_text(). Default: False.
 
     Returns:
         None.
@@ -69,7 +75,10 @@ def ingest_file(
             invalid, no chunks are produced, or the collection already
             contains entries.
     """
-    text = load_text(file_path)
+    if is_pdf:
+        text = load_pdf(file_path)
+    else:
+        text = load_text(file_path)
     if text is None:
         sys.exit(1)
     try:
@@ -146,9 +155,9 @@ def main() -> None:
         parser = argparse.ArgumentParser(
             description="Chunk a text file and store embeddings in Chroma."
         )
-        parser.add_argument(
-            "--file", required=True, help="Path to the .txt file to ingest"
-        )
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument("--file", type=str, help="Path to a .txt file to ingest")
+        group.add_argument("--pdf", type=str, help="Path to a .pdf file to ingest")
         parser.add_argument(
             "--size", type=int, default=500, help="Characters per chunk (default: 500)"
         )
@@ -161,7 +170,10 @@ def main() -> None:
         args = parser.parse_args()
 
         genai_client = genai.Client(api_key=api_key)
-        ingest_file(genai_client, args.file, args.size, args.overlap)
+        if args.pdf:
+            ingest_file(genai_client, args.pdf, args.size, args.overlap, is_pdf=True)
+        else:
+            ingest_file(genai_client, args.file, args.size, args.overlap, is_pdf=False)
     except KeyboardInterrupt:
         print("\n👋 Interrupted. Goodbye!")
         sys.exit(0)
