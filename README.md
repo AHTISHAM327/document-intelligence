@@ -19,6 +19,7 @@ Week 3 adds Gemini generation on top — grounded answers with source citations.
 | `chroma_store.py`    | Stores corpus in Chroma, queries by meaning    | Test Chroma in isolation               |
 | `chunker.py`         | Splits any text file into overlapping chunks   | Inspect chunks before ingesting        |
 | `ingest_text.py`     | Chunks a file and stores all chunks in Chroma  | **Main ingestion script**              |
+| `document_loader.py` | Extracts text from PDF files                   | Used by ingest_text.py --pdf           |
 
 ## Setup
 
@@ -36,6 +37,25 @@ cp .env.example .env
 
 ```bash
 python3 ingest_text.py --file your_document.txt
+```
+
+**Ingest a PDF document:**
+
+```bash
+python3 ingest_text.py --pdf your_document.pdf
+```
+
+**Then query it:**
+
+```bash
+python3 chroma_store.py --mode query --question "your question about the document"
+```
+
+**Re-ingest a different document:**
+
+```bash
+rm -rf chroma_db/
+python3 ingest_text.py --pdf new_document.pdf
 ```
 
 **Query it:**
@@ -100,10 +120,12 @@ document-intelligence/
 - [x] Semantic search — pure Python cosine similarity (Day 6)
 - [x] Chroma vector storage and retrieval (Day 7)
 - [x] Text chunking with configurable overlap (Day 7)
-- [ ] PDF document loading (Week 3)
-- [ ] Gemini generation with retrieved context (Week 3)
-- [ ] Source citations in answers (Week 3)
-- [ ] Multi-document support (Week 3)
+- [x] PDF document loading — PyPDF2 text extraction (Day 8)
+- [x] PDF ingestion pipeline end-to-end (Day 8)
+- [ ] Gemini generation with retrieved context (Day 9)
+- [ ] Source citations in answers (Day 9)
+- [ ] Multi-document support (Day 10)
+- [ ] CLI Q&A interface (Day 10)
 
 ## Tech Stack
 
