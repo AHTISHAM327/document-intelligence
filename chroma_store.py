@@ -121,8 +121,8 @@ def query_collection(
     collection: chromadb.Collection,
     question: str,
     top_k: int = 3,
-) -> None:
-    """Embed a question and print the most similar stored documents.
+) -> list[dict]:
+    """Embed a question, print the most similar stored documents, and return them.
 
     Args:
         genai_client: Initialized genai.Client instance.
@@ -131,7 +131,10 @@ def query_collection(
         top_k: Number of results to return.
 
     Returns:
-        None
+        List of result dicts, one per hit, each with keys: rank (int, 1-based),
+        similarity (float), document (str), metadata (dict). Empty list if the
+        collection is empty or the query could not be embedded. Callers can
+        iterate the result safely without a None check.
 
     Raises:
         Does not raise; failures are printed to stderr.
@@ -140,23 +143,33 @@ def query_collection(
         print(
             "❌ No data in collection. Run with --mode ingest first.", file=sys.stderr
         )
-        return
+        return []
     print(f"\n🔍 Query: {question}\n")
     embedding = get_embedding(genai_client, question)
     if embedding is None:
         print("❌ Could not embed query.", file=sys.stderr)
-        return
+        return []
     results = collection.query(query_embeddings=[embedding], n_results=top_k)
     documents = results["documents"][0]
     distances = results["distances"][0]
     metadatas = results["metadatas"][0]
     print("Rank | Similarity | Result")
     print("-" * 60)
-    for rank, (doc, dist) in enumerate(zip(documents, distances)):
+    hits = []
+    for rank, (doc, dist, meta) in enumerate(zip(documents, distances, metadatas)):
         # Chroma returns L2 distance, not similarity — convert here
         similarity = 1 - dist
         print(f"{rank+1:>4} | {similarity:.4f}     | {doc}")
+        hits.append(
+            {
+                "rank": rank + 1,
+                "similarity": similarity,
+                "document": doc,
+                "metadata": meta,
+            }
+        )
     print(f"\nSource metadata: {metadatas}")
+    return hits
 
 
 def main() -> None:
