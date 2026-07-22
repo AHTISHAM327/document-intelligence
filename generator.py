@@ -66,7 +66,7 @@ def generate_answer(question: str, chunks: list[dict]) -> str:
         return "No context was retrieved. Cannot generate an answer."
 
     context_block = "\n".join(
-        f"[CHUNK {i + 1} — Source: {chunk['source']}]\n{chunk['text']}\n"
+        f"[CHUNK {i + 1} — Source: {chunk['metadata'].get('source_file', 'unknown')}]\n{chunk['document']}\n"
         for i, chunk in enumerate(chunks)
     )
 
