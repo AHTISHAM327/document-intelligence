@@ -13,13 +13,14 @@ Week 3 adds Gemini generation on top — grounded answers with source citations.
 
 ## Scripts
 
-| Script               | What it does                                   | When to run it                         |
-| -------------------- | ---------------------------------------------- | -------------------------------------- |
-| `semantic_search.py` | Embeds 8 sentences, ranks by cosine similarity | Learning demo — proves embeddings work |
-| `chroma_store.py`    | Stores corpus in Chroma, queries by meaning    | Test Chroma in isolation               |
-| `chunker.py`         | Splits any text file into overlapping chunks   | Inspect chunks before ingesting        |
-| `ingest_text.py`     | Chunks a file and stores all chunks in Chroma  | **Main ingestion script**              |
-| `document_loader.py` | Extracts text from PDF files                   | Used by ingest_text.py --pdf           |
+| Script               | What it does                                                               | When to run it                         |
+| -------------------- | -------------------------------------------------------------------------- | -------------------------------------- |
+| `semantic_search.py` | Embeds 8 sentences, ranks by cosine similarity                             | Learning demo — proves embeddings work |
+| `chroma_store.py`    | Stores corpus in Chroma, queries by meaning                                | Test Chroma in isolation               |
+| `chunker.py`         | Splits any text file into overlapping chunks                               | Inspect chunks before ingesting        |
+| `ingest_text.py`     | Chunks a file and stores all chunks in Chroma                              | **Main ingestion script**              |
+| `document_loader.py` | Extracts text from PDF files                                               | Used by ingest_text.py --pdf           |
+| `generator.py`       | Generates grounded answers with citations from retrieved chunks via Gemini | Core generation step                   |
 
 ## Setup
 
@@ -95,6 +96,25 @@ Rank | Similarity | Result
    2 | 0.6834     | ...Nexus Analytics offers monthly and annual billing plans...
 ```
 
+**Test the generator standalone (uses mock chunks):**
+
+```bash
+python3 generator.py --question "what is the refund policy?"
+```
+
+**Full pipeline — PDF to grounded answer:**
+
+```python
+# After ingesting a PDF with ingest_text.py --pdf sample.pdf:
+from chroma_store import query_collection
+from generator import generate_answer
+
+chunks = query_collection("your question here", n_results=3)
+answer = generate_answer("your question here", chunks)
+print(answer)
+# Output: grounded answer with (Source: filename.pdf) citations
+```
+
 ## How It Works
 
 Text is split into overlapping chunks (default: 500 chars, 100-char overlap). Each
@@ -124,10 +144,10 @@ document-intelligence/
 - [x] Text chunking with configurable overlap (Day 7)
 - [x] PDF document loading — PyPDF2 text extraction (Day 8)
 - [x] PDF ingestion pipeline end-to-end (Day 8)
-- [ ] Gemini generation with retrieved context (Day 9)
-- [ ] Source citations in answers (Day 9)
-- [ ] Multi-document support (Day 10)
-- [ ] CLI Q&A interface (Day 10)
+- [x] Gemini generation with retrieved context (Day 9)
+- [x] Source citations in answers (Day 9)
+- [ ] Single-command Q&A CLI (Day 10)
+- [ ] Multi-document ingestion support (Day 10)
 
 ## Tech Stack
 
