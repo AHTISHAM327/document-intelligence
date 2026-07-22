@@ -28,7 +28,9 @@ git clone https://github.com/AHTISHAM327/document-intelligence.git
 cd document-intelligence
 python3 -m pip install -r requirements.txt
 cp .env.example .env
+
 # Add your Gemini API key from aistudio.google.com to .env
+
 ```
 
 ## Usage
