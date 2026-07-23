@@ -13,14 +13,15 @@ Week 3 adds Gemini generation on top — grounded answers with source citations.
 
 ## Scripts
 
-| Script               | What it does                                                               | When to run it                         |
-| -------------------- | -------------------------------------------------------------------------- | -------------------------------------- |
-| `semantic_search.py` | Embeds 8 sentences, ranks by cosine similarity                             | Learning demo — proves embeddings work |
-| `chroma_store.py`    | Stores corpus in Chroma, queries by meaning                                | Test Chroma in isolation               |
-| `chunker.py`         | Splits any text file into overlapping chunks                               | Inspect chunks before ingesting        |
-| `ingest_text.py`     | Chunks a file and stores all chunks in Chroma                              | **Main ingestion script**              |
-| `document_loader.py` | Extracts text from PDF files                                               | Used by ingest_text.py --pdf           |
-| `generator.py`       | Generates grounded answers with citations from retrieved chunks via Gemini | Core generation step                   |
+| Script               | What it does                                                                       | When to run it                         |
+| -------------------- | ---------------------------------------------------------------------------------- | -------------------------------------- |
+| `semantic_search.py` | Embeds 8 sentences, ranks by cosine similarity                                     | Learning demo — proves embeddings work |
+| `chroma_store.py`    | Stores corpus in Chroma, queries by meaning                                        | Test Chroma in isolation               |
+| `chunker.py`         | Splits any text file into overlapping chunks                                       | Inspect chunks before ingesting        |
+| `ingest_text.py`     | Chunks a file and stores all chunks in Chroma                                      | **Main ingestion script**              |
+| `document_loader.py` | Extracts text from PDF files                                                       | Used by ingest_text.py --pdf           |
+| `generator.py`       | Generates grounded answers with citations from retrieved chunks via Gemini         | Core generation step                   |
+| `qa.py`              | Single-command CLI — ingest a PDF (if needed) and answer a question with citations | Main entry point                       |
 
 ## Setup
 
@@ -32,6 +33,26 @@ cp .env.example .env
 
 # Add your Gemini API key from aistudio.google.com to .env
 
+```
+
+## Quick Start
+
+```bash
+python3 qa.py --pdf your_document.pdf --question "your question here"
+```
+
+That's it — one command. It ingests the PDF on first run and reuses the index on later
+questions. Add `--reingest` to force a fresh ingest, or `--top-k 5` to retrieve more context chunks.
+
+**Example:**
+
+```bash
+python3 qa.py --pdf sample.pdf --question "what is the refund policy?"
+```
+
+```
+Refund requests must be submitted within 30 days of purchase.
+Contact billing@nexusanalytics.com with your invoice number. (Source: sample.pdf)
 ```
 
 ## Usage
@@ -146,8 +167,8 @@ document-intelligence/
 - [x] PDF ingestion pipeline end-to-end (Day 8)
 - [x] Gemini generation with retrieved context (Day 9)
 - [x] Source citations in answers (Day 9)
-- [ ] Single-command Q&A CLI (Day 10)
-- [ ] Multi-document ingestion support (Day 10)
+- [x] Single-command Q&A CLI (Day 10)
+- [ ] Multi-document ingestion support (future)
 
 ## Tech Stack
 
