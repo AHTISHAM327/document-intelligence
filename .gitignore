@@ -7,3 +7,4 @@ venv/
 chroma_db/
 .idea
 .vscode
+.streamlit/secrets.toml
